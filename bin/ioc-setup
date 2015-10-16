@@ -5,8 +5,7 @@ if ! which iocage >/dev/null 2>&1 ; then
     exit 1
 fi
 
-POOLNAME=tank
-RELEASE=10.1-RELEASE
+. ~/bin/ioc-conf
 
 iocage activate ${POOLNAME}
 

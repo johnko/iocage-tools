@@ -9,6 +9,8 @@ TEMPLATE=${1}
 JAILNAME=${2}
 NICNET="${3}"
 
+. ~/bin/ioc-conf
+
 pf-nat-jails
 
 iocage clone ${TEMPLATE} tag=${JAILNAME} ip4_addr="${NICNET}"

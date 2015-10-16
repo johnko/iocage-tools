@@ -9,6 +9,8 @@ fi
 TEMPLATE=${1}
 NICNET="${2}"
 
+. ~/bin/ioc-conf
+
 pf-nat-jails
 
 iocage create -c tag=${TEMPLATE} ip4_addr="${NICNET}"
@@ -38,6 +40,7 @@ else
         iocage chroot ${UUID} psnap
         # stop jail
         iocage stop ${UUID}
+        iocage set notes="template based on ${RELEASE} with pkg-static, fres, psnap" ${UUID}
         iocage set template=yes ${UUID}
         if ! iocage list -t | grep "${UUID}" >/dev/null 2>/dev/null ; then
             echo "ERROR: template not converted from jail."

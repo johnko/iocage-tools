@@ -1,0 +1,7 @@
+#!/bin/sh
+
+POOLNAME=tank
+RELEASE=10.1-RELEASE
+
+export POOLNAME
+export RELEASE
