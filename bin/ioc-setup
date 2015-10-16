@@ -5,6 +5,8 @@ RELEASE=10.1-RELEASE
 
 iocage activate ${POOLNAME}
 
-iocage fetch release=${RELEASE}
+if [ ! -e /iocage/releases/${RELEASE}/root ]; then
+    iocage fetch release=${RELEASE}
+fi
 
 sysrc -f /etc/rc.conf.d/iocage iocage_enable="YES"
