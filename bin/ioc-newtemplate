@@ -20,7 +20,10 @@ else
         install -d -m 700 \
               /iocage/jails/${UUID}/root/root/bin
     fi
-    if [ -d /iocage/jails/${UUID}/root/root/bin ]; then
+    if [ ! -d /iocage/jails/${UUID}/root/root/bin ]; then
+        echo "ERROR: template /root/bin not created."
+        exit 1
+    else
         ## run fres
         install -m 700 ~/bin/fres  /iocage/jails/${UUID}/root/root/bin/fres
         iocage chroot ${UUID} fres
@@ -28,5 +31,10 @@ else
         #install -m 700 ~/bin/psnap /iocage/jails/${UUID}/root/root/bin/psnap
         #iocage chroot ${UUID} psnap
         iocage stop ${UUID}
+        iocage set template=yes ${UUID}
+        if ! iocage list -t | grep "${UUID}" >/dev/null 2>/dev/null ; then
+            echo "ERROR: template not converted from jail."
+            exit 1
+        fi
     fi
 fi
