@@ -24,6 +24,7 @@ else
         echo "ERROR: template /root/bin not created."
         exit 1
     else
+        install -m 755 /usr/local/sbin/pkg-static  /iocage/jails/${UUID}/root/sbin/pkg-static
         ## run fres
         install -m 700 ~/bin/fres  /iocage/jails/${UUID}/root/root/bin/fres
         iocage chroot ${UUID} fres
