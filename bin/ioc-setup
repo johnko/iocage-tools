@@ -5,7 +5,13 @@ if ! which iocage >/dev/null 2>&1 ; then
     exit 1
 fi
 
+
+
+
+
 . ~/bin/ioc-conf
+
+pf-nat-jails
 
 iocage activate ${POOLNAME}
 
