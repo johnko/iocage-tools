@@ -5,7 +5,7 @@ RELEASE=10.1-RELEASE
 
 iocage activate ${POOLNAME}
 
-if [ ! -e /iocage/releases/${RELEASE}/root ]; then
+if ! iocage list -r | grep "${RELEASE}" >/dev/null 2>/dev/null ; then
     iocage fetch release=${RELEASE}
 fi
 
