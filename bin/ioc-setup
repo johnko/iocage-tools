@@ -1,5 +1,10 @@
 #!/bin/sh
 
+if ! which iocage >/dev/null 2>&1 ; then
+    echo "ERROR: iocage not found."
+    exit 1
+fi
+
 POOLNAME=tank
 RELEASE=10.1-RELEASE
 
