@@ -5,6 +5,6 @@ RELEASE=10.1-RELEASE
 
 iocage activate ${POOLNAME}
 
-iocage fetch release=${RELEASE} ftpfiles="base.txz lib32.txz"
+iocage fetch release=${RELEASE}
 
 sysrc -f /etc/rc.conf.d/iocage iocage_enable="YES"
