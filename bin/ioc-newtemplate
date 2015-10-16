@@ -29,7 +29,8 @@ else
         iocage chroot ${UUID} fres
         ## run portsnap
         #install -m 700 ~/bin/psnap /iocage/jails/${UUID}/root/root/bin/psnap
-        #iocage chroot ${UUID} psnap
+        iocage chroot ${UUID} psnap
+        # stop jail
         iocage stop ${UUID}
         iocage set template=yes ${UUID}
         if ! iocage list -t | grep "${UUID}" >/dev/null 2>/dev/null ; then
