@@ -1,0 +1,9 @@
+#!/bin/sh
+
+JAILNAME=${1}
+NICNET="${2}"
+
+pf-nat-jails
+
+iocage create -c tag=${JAILNAME} ip4_addr="${NICNET}"
+iocage set boot=on ${JAILNAME}
