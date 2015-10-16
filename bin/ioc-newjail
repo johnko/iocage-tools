@@ -1,9 +1,18 @@
 #!/bin/sh
 
-JAILNAME=${1}
-NICNET="${2}"
+TEMPLATE=${1}
+JAILNAME=${2}
+NICNET="${3}"
 
 pf-nat-jails
 
-iocage create -c tag=${JAILNAME} ip4_addr="${NICNET}"
+iocage clone ${TEMPLATE} tag=${JAILNAME} ip4_addr="${NICNET}"
 iocage set boot=on ${JAILNAME}
+
+# grep the newly created UUID
+UUID=$( iocage list | grep "${JAILNAME}$" | awk '{print $2}' )
+
+if [ ! -e /iocage/jails/${UUID}/root/root ]; then
+    echo "ERROR: jail not created."
+    exit 1
+fi

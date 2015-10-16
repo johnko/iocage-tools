@@ -1,0 +1,32 @@
+#!/bin/sh
+
+
+TEMPLATE=${1}
+NICNET="${2}"
+
+pf-nat-jails
+
+iocage create -c tag=${TEMPLATE} ip4_addr="${NICNET}"
+iocage set boot=on ${TEMPLATE}
+
+# grep the newly created UUID
+UUID=$( iocage list | grep "${TEMPLATE}$" | awk '{print $2}' )
+
+if [ ! -e /iocage/jails/${UUID}/root/root ]; then
+    echo "ERROR: template not created."
+    exit 1
+else
+    if [ ! -d /iocage/jails/${UUID}/root/root/bin ]; then
+        install -d -m 700 \
+              /iocage/jails/${UUID}/root/root/bin
+    fi
+    if [ -d /iocage/jails/${UUID}/root/root/bin ]; then
+        ## run fres
+        install -m 700 ~/bin/fres  /iocage/jails/${UUID}/root/root/bin/fres
+        iocage chroot ${UUID} fres
+        ## run portsnap
+        #install -m 700 ~/bin/psnap /iocage/jails/${UUID}/root/root/bin/psnap
+        #iocage chroot ${UUID} psnap
+        iocage stop ${UUID}
+    fi
+fi
