@@ -22,4 +22,17 @@ UUID=$( iocage list | grep "${JAILNAME}$" | awk '{print $2}' )
 if [ ! -e /iocage/jails/${UUID}/root/root ]; then
     echo "ERROR: jail not created."
     exit 1
+else
+    if [ ! -d /iocage/jails/${UUID}/root/root/local ]; then
+        install -d -m 700 \
+              /iocage/jails/${UUID}/root/root/local
+    fi
+    if [ ! -d /iocage/jails/${UUID}/root/root/local ]; then
+        echo "ERROR: template /root/local not created."
+        exit 1
+    else
+        if [ -e ~/local/cshvars ]; then
+            install -m 600 ~/local/cshvars  /iocage/jails/${UUID}/root/root/local/cshvars
+        fi
+    fi
 fi
