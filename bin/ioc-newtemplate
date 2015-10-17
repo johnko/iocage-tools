@@ -35,10 +35,19 @@ else
         ## run fres
         install -m 700 ~/bin/fres  /iocage/jails/${UUID}/root/root/bin/fres
         iocage chroot ${UUID} fres
+
         ## run portsnap
         #install -m 700 ~/bin/psnap /iocage/jails/${UUID}/root/root/bin/psnap
-        iocage chroot ${UUID} psnap
-        # stop jail
+        ##can't run psnap in a chroot because it misses fetching some files
+        ##iocage chroot ${UUID} psnap
+        ## ask user for help
+        cat <<EOF
+Please run this:
+    setenv HTTP_PROXY ${HTTP_PROXY}
+    psnap ; exit
+EOF
+
+        ## stop jail
         iocage stop ${UUID}
         iocage set notes="template based on ${RELEASE} with pkg-static, fres, psnap" ${UUID}
         iocage set template=yes ${UUID}
