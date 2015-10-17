@@ -46,6 +46,7 @@ Please run this:
     setenv HTTP_PROXY ${HTTP_PROXY}
     psnap ; exit
 EOF
+        iocage console ${UUID}
 
         ## stop jail
         iocage stop ${UUID}
