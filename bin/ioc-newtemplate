@@ -35,6 +35,13 @@ else
         touch /iocage/jails/${UUID}/root/root/.hushlogin
         ## install pkg-static
         install -m 755 /usr/local/sbin/pkg-static  /iocage/jails/${UUID}/root/sbin/pkg-static
+        ## install etc/files
+        for i in $( ls ~/git/iocage-tools/etc ) ; do
+            if [ -f ~/git/iocage-tools/etc/${i} ]; then
+                install -m 644 ~/git/iocage-tools/etc/${i}  /iocage/jails/${UUID}/root/etc/${i}
+            fi
+        done
+
         ## run fres
         install -m 700 ~/bin/fres  /iocage/jails/${UUID}/root/root/bin/fres
         iocage chroot ${UUID} fres
