@@ -41,6 +41,7 @@ else
         ##can't run psnap in a chroot because it misses fetching some files
         ##iocage chroot ${UUID} psnap
         ## ask user for help
+        iocage start ${UUID}
         cat <<EOF
 Please run this:
     setenv HTTP_PROXY ${HTTP_PROXY}
