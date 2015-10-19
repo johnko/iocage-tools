@@ -28,6 +28,9 @@ if [ ! -e /iocage/jails/${UUID}/root/root ]; then
     echo "ERROR: jail not created."
     exit 1
 else
+    ## create the firstboot_sentinel file
+    touch /iocage/jails/${UUID}/root/firstboot
+    ## create local
     if [ ! -d /iocage/jails/${UUID}/root/root/local ]; then
         install -d -m 700 \
               /iocage/jails/${UUID}/root/root/local
@@ -36,6 +39,7 @@ else
         echo "ERROR: template /root/local not created."
         exit 1
     else
+        ## copy local/cshvars
         if [ -e ~/local/cshvars ]; then
             install -m 600 ~/local/cshvars  /iocage/jails/${UUID}/root/root/local/cshvars
         fi
