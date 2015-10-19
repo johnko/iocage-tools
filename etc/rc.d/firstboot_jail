@@ -1,0 +1,62 @@
+#!/bin/sh
+
+# $FreeBSD$
+# KEYWORD: firstboot
+# PROVIDE: firstboot_jail
+# REQUIRE: FILESYSTEMS NETWORKING SERVERS DAEMON LOGIN dhclient
+# BEFORE: LOGIN
+
+## Modified from cperciva's sysutils/firstboot-pkgs
+
+# Add the following lines to /etc/rc.conf.local or /etc/rc.conf (in the disk
+# image, since this only runs on the first boot) to enable this:
+#
+# firstboot_jail_enable="YES"
+#
+# and set the HTTP_PROXY IP:PORT part in firstboot_jail_squid, e.g.,
+#
+# firstboot_jail_squid="192.168.255.201:3128"
+
+. /etc/rc.subr
+
+: ${firstboot_jail_enable:="NO"}
+
+name="firstboot_jail"
+rcvar=firstboot_jail_enable
+start_cmd="firstboot_jail_run"
+stop_cmd=":"
+
+firstboot_jail_run()
+{
+
+    ## Set HOME so we have the right HOME folder
+    # echo "HOME var before: $HOME"
+    HOME=/root
+    export HOME
+    ## set PATH so fres can find git
+    PATH="/sbin:/bin:/usr/sbin:/usr/bin:/usr/games:/usr/local/sbin:/usr/local/bin:${HOME}/bin"
+    export PATH
+    # echo "HOME var after: $HOME"
+
+    if [ "x" != "x${firstboot_jail_squid}" ]; then
+        echo "RUN: env SQUID=${firstboot_jail_squid} setproxy"
+                   env SQUID=${firstboot_jail_squid} setproxy
+    fi
+
+    ## Setup $HOME/bin , $HOME/git and more
+    echo "RUN: fres"
+               fres
+    if [ -e ${HOME}/git/skel/bin/fres ]; then
+        echo "RUN: rm -r ${HOME}/bin/"
+                   rm -r ${HOME}/bin/
+        sh ${HOME}/git/skel/bin/fres
+    fi
+
+    ## setup portsnap
+    echo "RUN: psnap"
+    psnap
+
+}
+
+load_rc_config $name
+run_rc_command "$1"

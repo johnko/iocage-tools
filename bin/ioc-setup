@@ -9,19 +9,17 @@ fi
 
 
 
-. ~/bin/ioc-conf
-
 pf-nat-jails
 
-if zfs list ${POOLNAME} >/dev/null 2>/dev/null ; then
-    iocage activate ${POOLNAME}
+if zfs list ${IOCPOOLNAME} >/dev/null 2>/dev/null ; then
+    iocage activate ${IOCPOOLNAME}
 
-    if ! iocage list -r | grep "${RELEASE}" >/dev/null 2>/dev/null ; then
-        iocage fetch release=${RELEASE}
+    if ! iocage list -r | grep "${IOCRELEASE}" >/dev/null 2>/dev/null ; then
+        iocage fetch release=${IOCRELEASE}
     fi
 
     sysrc -f /etc/rc.conf.d/iocage iocage_enable="YES"
 else
-    echo "ERROR: ioc-setup not complete because ${POOLNAME} doesn't exist."
+    echo "ERROR: ioc-setup not complete because ${IOCPOOLNAME} doesn't exist."
     exit 1
 fi

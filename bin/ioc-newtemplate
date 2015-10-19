@@ -14,8 +14,6 @@ fi
 TEMPLATE=${1}
 NICNET="${2}"
 
-. ~/bin/ioc-conf
-
 pf-nat-jails
 
 iocage create -c tag=${TEMPLATE} ip4_addr="${NICNET}"
@@ -28,6 +26,31 @@ if [ ! -e /iocage/jails/${UUID}/root/root ]; then
     echo "ERROR: template not created."
     exit 1
 else
+    ## create the firstboot_sentinel file
+    touch /iocage/jails/${UUID}/root/firstboot
+    sysrc -f /iocage/jails/${UUID}/root/etc/rc.conf.d/firstboot_jail firstboot_jail_enable=YES
+    SQUID=$( echo ${HTTP_PROXY} | awk -F/ '{print $NF}' )
+    if [ "x" != "x${SQUID}" ]; then
+        sysrc -f /iocage/jails/${UUID}/root/etc/rc.conf.d/firstboot_jail firstboot_jail_squid="${SQUID}"
+    fi
+    ## install pkg-static
+    install -m 755 /usr/local/sbin/pkg-static  /iocage/jails/${UUID}/root/sbin/pkg-static
+    ## install etc/files
+    for i in $( find ~/git/iocage-tools/etc -type f -maxdepth 1 ) ; do
+        if [ -f ${i} ]; then
+            install -m 644 ${i}  /iocage/jails/${UUID}/root/etc/${i##*/}
+        fi
+    done
+    ## install etc/rc.d/files
+    for i in $( find ~/git/iocage-tools/etc/rc.d -type f -maxdepth 1 ) ; do
+        if [ -f ${i} ]; then
+            install -m 555 ${i}  /iocage/jails/${UUID}/root/etc/rc.d/${i##*/}
+        fi
+    done
+
+
+    ## skip motd on jail console
+    touch /iocage/jails/${UUID}/root/root/.hushlogin
     if [ ! -d /iocage/jails/${UUID}/root/root/bin ]; then
         install -d -m 700 \
               /iocage/jails/${UUID}/root/root/bin
@@ -36,41 +59,22 @@ else
         echo "ERROR: template /root/bin not created."
         exit 1
     else
-        ## skip motd on jail console
-        touch /iocage/jails/${UUID}/root/root/.hushlogin
-        ## install pkg-static
-        install -m 755 /usr/local/sbin/pkg-static  /iocage/jails/${UUID}/root/sbin/pkg-static
-        ## install etc/files
-        for i in $( ls ~/git/iocage-tools/etc ) ; do
-            if [ -f ~/git/iocage-tools/etc/${i} ]; then
-                install -m 644 ~/git/iocage-tools/etc/${i}  /iocage/jails/${UUID}/root/etc/${i}
-            fi
-        done
-
-        ## run fres
+        ## install fres
         install -m 700 ~/bin/fres  /iocage/jails/${UUID}/root/root/bin/fres
-        iocage chroot ${UUID} fres
+    fi
 
-        ## run portsnap
-        #install -m 700 ~/bin/psnap /iocage/jails/${UUID}/root/root/bin/psnap
-        ##can't run psnap in a chroot because it misses fetching some files
-        ##iocage chroot ${UUID} psnap
-        ## ask user for help
-        iocage start ${UUID}
-        cat <<EOF
-Please run this:
-    setenv HTTP_PROXY ${HTTP_PROXY}
-    psnap ; exit
-EOF
-        iocage console ${UUID}
 
-        ## stop jail
-        iocage stop ${UUID}
-        iocage set notes="template based on ${RELEASE} with pkg-static, fres, psnap" ${UUID}
-        iocage set template=yes ${UUID}
-        if ! iocage list -t | grep "${UUID}" >/dev/null 2>/dev/null ; then
-            echo "ERROR: template not converted from jail."
-            exit 1
-        fi
+    ## start jail so it runs firstboot
+    iocage start ${UUID}
+    echo "Setup the template however you like, then exit."
+    ## open console to wait
+    iocage console ${UUID}
+    ## stop jail
+    iocage stop ${UUID}
+    iocage set notes="template based on ${IOCRELEASE} with pkg-static, fres, psnap" ${UUID}
+    iocage set template=yes ${UUID}
+    if ! iocage list -t | grep "${UUID}" >/dev/null 2>/dev/null ; then
+        echo "ERROR: template not converted from jail."
+        exit 1
     fi
 fi
