@@ -1,5 +1,10 @@
 #!/bin/sh
 
+if [ "x" = "x$3" ]; then
+    echo "Usage: $0 template tag 'nic0|10.7.7.x/32'"
+    exit 1
+fi
+
 if ! which iocage >/dev/null 2>&1 ; then
     echo "ERROR: iocage not found."
     exit 1
