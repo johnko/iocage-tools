@@ -48,7 +48,6 @@ else
         fi
     done
 
-
     ## skip motd on jail console
     touch /iocage/jails/${UUID}/root/root/.hushlogin
     if [ ! -d /iocage/jails/${UUID}/root/root/bin ]; then
@@ -63,12 +62,13 @@ else
         install -m 700 ~/bin/fres  /iocage/jails/${UUID}/root/root/bin/fres
     fi
 
-
     ## start jail so it runs firstboot
     iocage start ${UUID}
-    echo "Setup the template however you like, then exit."
+
+    #echo "Setup the template however you like, then exit."
     ## open console to wait
-    iocage console ${UUID}
+    #iocage console ${UUID}
+
     ## stop jail
     iocage stop ${UUID}
     iocage set notes="template based on ${IOCRELEASE} with pkg-static, fres, psnap" ${UUID}
