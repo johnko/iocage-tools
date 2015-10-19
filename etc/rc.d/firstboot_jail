@@ -41,6 +41,9 @@ firstboot_jail_run()
     if [ "x" != "x${firstboot_jail_squid}" ]; then
         echo "RUN: env SQUID=${firstboot_jail_squid} setproxy"
                    env SQUID=${firstboot_jail_squid} setproxy
+        ## export HTTP_PROXY for psnap
+        HTTP_PROXY="http://${firstboot_jail_squid}"
+        export HTTP_PROXY
     fi
 
     ## Setup $HOME/bin , $HOME/git and more
