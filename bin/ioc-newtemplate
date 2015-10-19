@@ -1,7 +1,7 @@
 #!/bin/sh
 
 if [ "x" = "x$2" ]; then
-    echo "Usage: $0 template 'nic0|10.7.7.x/32'"
+    echo "Usage: $0 common 'lo1|10.7.7.x/32'"
     exit 1
 fi
 
