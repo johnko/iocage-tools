@@ -20,6 +20,14 @@
 # and optionally set the deploy_XXX script in firstboot_jail_deploy, e.g.,
 #
 # firstboot_jail_deploy="squid"
+#
+# and optionally set the FQDN in firstboot_jail_fqdn, e.g.,
+#
+# firstboot_jail_fqdn="virtual.local"
+#
+# and optionally set the REPOSRC in firstboot_jail_reposrc, e.g.,
+#
+# firstboot_jail_reposrc="https://github.com/"
 
 . /etc/rc.subr
 
@@ -48,6 +56,16 @@ firstboot_jail_run()
         ## export HTTP_PROXY for psnap
         HTTP_PROXY="http://${firstboot_jail_squid}"
         export HTTP_PROXY
+    fi
+
+    ## setup some vars that deploy scripts use
+    if [ "x" != "x${firstboot_jail_fqdn}" ]; then
+        FQDN=${firstboot_jail_fqdn}
+        export FQDN
+    fi
+    if [ "x" != "x${firstboot_jail_reposrc}" ]; then
+        REPOSRC=${firstboot_jail_reposrc}
+        export REPOSRC
     fi
 
     ## Setup $HOME/bin , $HOME/git and more
