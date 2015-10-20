@@ -17,7 +17,7 @@ NICNET="${2}"
 pf-nat-jails
 
 iocage create -c tag=${TEMPLATE} ip4_addr="${NICNET}"
-iocage set boot=on ${TEMPLATE}
+iocage set boot=off ${TEMPLATE}
 
 # grep the newly created UUID
 UUID=$( iocage list | grep "${TEMPLATE}$" | awk '{print $2}' )
