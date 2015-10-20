@@ -19,61 +19,58 @@ pf-nat-jails
 iocage create -c tag=${TEMPLATE} ip4_addr="${NICNET}"
 iocage set boot=off ${TEMPLATE}
 
-# grep the newly created UUID
-UUID=$( iocage list | grep "${TEMPLATE}$" | awk '{print $2}' )
-
-if [ ! -e /iocage/jails/${UUID}/root/root ]; then
+if [ ! -e $( iocage get mountpoint ${TEMPLATE} )/root/root ]; then
     echo "ERROR: template not created."
     exit 1
 else
     ## create the firstboot_sentinel file
-    touch /iocage/jails/${UUID}/root/firstboot
-    sysrc -f /iocage/jails/${UUID}/root/etc/rc.conf.d/firstboot_jail firstboot_jail_enable=YES
+    touch $( iocage get mountpoint ${TEMPLATE} )/root/firstboot
+    sysrc -f $( iocage get mountpoint ${TEMPLATE} )/root/etc/rc.conf.d/firstboot_jail firstboot_jail_enable=YES
     SQUID=$( echo ${HTTP_PROXY} | awk -F/ '{print $NF}' )
     if [ "x" != "x${SQUID}" ]; then
-        sysrc -f /iocage/jails/${UUID}/root/etc/rc.conf.d/firstboot_jail firstboot_jail_squid="${SQUID}"
+        sysrc -f $( iocage get mountpoint ${TEMPLATE} )/root/etc/rc.conf.d/firstboot_jail firstboot_jail_squid="${SQUID}"
     fi
     ## install pkg-static
-    install -m 755 /usr/local/sbin/pkg-static  /iocage/jails/${UUID}/root/sbin/pkg-static
+    install -m 755 /usr/local/sbin/pkg-static  $( iocage get mountpoint ${TEMPLATE} )/root/sbin/pkg-static
     ## install etc/files
     for i in $( find ~/git/iocage-tools/etc -type f -maxdepth 1 ) ; do
         if [ -f ${i} ]; then
-            install -m 644 ${i}  /iocage/jails/${UUID}/root/etc/${i##*/}
+            install -m 644 ${i}  $( iocage get mountpoint ${TEMPLATE} )/root/etc/${i##*/}
         fi
     done
     ## install etc/rc.d/files
     for i in $( find ~/git/iocage-tools/etc/rc.d -type f -maxdepth 1 ) ; do
         if [ -f ${i} ]; then
-            install -m 555 ${i}  /iocage/jails/${UUID}/root/etc/rc.d/${i##*/}
+            install -m 555 ${i}  $( iocage get mountpoint ${TEMPLATE} )/root/etc/rc.d/${i##*/}
         fi
     done
 
     ## skip motd on jail console
-    touch /iocage/jails/${UUID}/root/root/.hushlogin
-    if [ ! -d /iocage/jails/${UUID}/root/root/bin ]; then
+    touch $( iocage get mountpoint ${TEMPLATE} )/root/root/.hushlogin
+    if [ ! -d $( iocage get mountpoint ${TEMPLATE} )/root/root/bin ]; then
         install -d -m 700 \
-              /iocage/jails/${UUID}/root/root/bin
+              $( iocage get mountpoint ${TEMPLATE} )/root/root/bin
     fi
-    if [ ! -d /iocage/jails/${UUID}/root/root/bin ]; then
+    if [ ! -d $( iocage get mountpoint ${TEMPLATE} )/root/root/bin ]; then
         echo "ERROR: template /root/bin not created."
         exit 1
     else
         ## install fres
-        install -m 700 ~/bin/fres  /iocage/jails/${UUID}/root/root/bin/fres
+        install -m 700 ~/bin/fres  $( iocage get mountpoint ${TEMPLATE} )/root/root/bin/fres
     fi
 
     ## start jail so it runs firstboot
-    iocage start ${UUID}
+    iocage start ${TEMPLATE}
 
     #echo "Setup the template however you like, then exit."
     ## open console to wait
-    #iocage console ${UUID}
+    #iocage console ${TEMPLATE}
 
     ## stop jail
-    iocage stop ${UUID}
-    iocage set notes="template based on ${IOCRELEASE} with pkg-static, fres, psnap" ${UUID}
-    iocage set template=yes ${UUID}
-    if ! iocage list -t | grep "${UUID}" >/dev/null 2>/dev/null ; then
+    iocage stop ${TEMPLATE}
+    iocage set notes="template based on ${IOCRELEASE} with pkg-static, fres, psnap" ${TEMPLATE}
+    iocage set template=yes ${TEMPLATE}
+    if ! iocage list -t | grep "${TEMPLATE}$" >/dev/null 2>/dev/null ; then
         echo "ERROR: template not converted from jail."
         exit 1
     fi

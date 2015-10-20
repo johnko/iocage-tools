@@ -19,47 +19,44 @@ pf-nat-jails
 iocage clone ${TEMPLATE} tag=${JAILNAME} ip4_addr="${NICNET}"
 iocage set boot=on ${JAILNAME}
 
-# grep the newly created UUID
-UUID=$( iocage list | grep "${JAILNAME}$" | awk '{print $2}' )
-
-if [ ! -e /iocage/jails/${UUID}/root/root ]; then
+if [ ! -e $( iocage get mountpoint ${JAILNAME} )/root/root ]; then
     echo "ERROR: jail not created."
     exit 1
 else
     ## create the firstboot_sentinel file
-    touch /iocage/jails/${UUID}/root/firstboot
-    sysrc -f /iocage/jails/${UUID}/root/etc/rc.conf.d/firstboot_jail firstboot_jail_enable=YES
+    touch $( iocage get mountpoint ${JAILNAME} )/root/firstboot
+    sysrc -f $( iocage get mountpoint ${JAILNAME} )/root/etc/rc.conf.d/firstboot_jail firstboot_jail_enable=YES
     SQUID=$( echo ${HTTP_PROXY} | awk -F/ '{print $NF}' )
     if [ "x" != "x${SQUID}" ]; then
-        sysrc -f /iocage/jails/${UUID}/root/etc/rc.conf.d/firstboot_jail firstboot_jail_squid="${SQUID}"
+        sysrc -f $( iocage get mountpoint ${JAILNAME} )/root/etc/rc.conf.d/firstboot_jail firstboot_jail_squid="${SQUID}"
     fi
     ## install pkg-static
-    install -m 755 /usr/local/sbin/pkg-static  /iocage/jails/${UUID}/root/sbin/pkg-static
+    install -m 755 /usr/local/sbin/pkg-static  $( iocage get mountpoint ${JAILNAME} )/root/sbin/pkg-static
     ## install etc/files
     for i in $( find ~/git/iocage-tools/etc -type f -maxdepth 1 ) ; do
         if [ -f ${i} ]; then
-            install -m 644 ${i}  /iocage/jails/${UUID}/root/etc/${i##*/}
+            install -m 644 ${i}  $( iocage get mountpoint ${JAILNAME} )/root/etc/${i##*/}
         fi
     done
     ## install etc/rc.d/files
     for i in $( find ~/git/iocage-tools/etc/rc.d -type f -maxdepth 1 ) ; do
         if [ -f ${i} ]; then
-            install -m 555 ${i}  /iocage/jails/${UUID}/root/etc/rc.d/${i##*/}
+            install -m 555 ${i}  $( iocage get mountpoint ${JAILNAME} )/root/etc/rc.d/${i##*/}
         fi
     done
 
     ## create local
-    if [ ! -d /iocage/jails/${UUID}/root/root/local ]; then
+    if [ ! -d $( iocage get mountpoint ${JAILNAME} )/root/root/local ]; then
         install -d -m 700 \
-              /iocage/jails/${UUID}/root/root/local
+              $( iocage get mountpoint ${JAILNAME} )/root/root/local
     fi
-    if [ ! -d /iocage/jails/${UUID}/root/root/local ]; then
+    if [ ! -d $( iocage get mountpoint ${JAILNAME} )/root/root/local ]; then
         echo "ERROR: template /root/local not created."
         exit 1
     else
         ## copy local/cshvars
         if [ -e ~/local/cshvars ]; then
-            install -m 600 ~/local/cshvars  /iocage/jails/${UUID}/root/root/local/cshvars
+            install -m 600 ~/local/cshvars  $( iocage get mountpoint ${JAILNAME} )/root/root/local/cshvars
         fi
     fi
 fi

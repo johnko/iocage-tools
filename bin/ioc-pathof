@@ -12,11 +12,9 @@ fi
 
 JAILNAME=${1}
 
-UUID=$( iocage list | grep "${JAILNAME}$" | awk '{print $2}' )
-
-if [ ! -e /iocage/jails/${UUID}/root ]; then
+if [ ! -e $( iocage get mountpoint ${JAILNAME} )/root ]; then
     echo "ERROR: jail path not found."
     exit 1
 else
-    echo "/iocage/jails/${UUID}/root"
+    echo "$( iocage get mountpoint ${JAILNAME} )/root"
 fi
