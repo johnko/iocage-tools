@@ -13,9 +13,13 @@
 #
 # firstboot_jail_enable="YES"
 #
-# and set the HTTP_PROXY IP:PORT part in firstboot_jail_squid, e.g.,
+# and optionally set the HTTP_PROXY IP:PORT part in firstboot_jail_squid, e.g.,
 #
 # firstboot_jail_squid="192.168.255.201:3128"
+#
+# and optionally set the deploy_XXX script in firstboot_jail_deploy, e.g.,
+#
+# firstboot_jail_deploy="squid"
 
 . /etc/rc.subr
 
@@ -58,6 +62,12 @@ firstboot_jail_run()
     ## setup portsnap
     echo "RUN: psnap"
     psnap
+
+    ## run deploy_${firstboot_jail_deploy}
+    if which deploy_${firstboot_jail_deploy} >/dev/null 2>/dev/null ; then
+        echo "RUN: deploy_${firstboot_jail_deploy}"
+                   deploy_${firstboot_jail_deploy}
+    fi
 
 }
 
