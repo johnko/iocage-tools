@@ -12,6 +12,11 @@ fi
 
 JAILNAME=${1}
 
+if ! iocage get mountpoint ${JAILNAME} >/dev/null 2>&1 ; then
+    echo "ERROR: jail not found."
+    exit 1
+fi
+
 if [ ! -e $( iocage get mountpoint ${JAILNAME} )/root ]; then
     echo "ERROR: jail path not found."
     exit 1
