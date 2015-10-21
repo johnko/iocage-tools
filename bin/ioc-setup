@@ -19,7 +19,7 @@ if zfs list ${IOCPOOLNAME} >/dev/null 2>/dev/null ; then
         ## bsdinstall distfetch
         iocage fetch release=${IOCRELEASE} \
             ftphost=ftp.freebsd.org \
-            ftpdir=/pub/FreeBSD/releases/`uname -m`/`uname -p`/${IOCRELEASE}/
+            ftpdir=/pub/FreeBSD/releases/`uname -m`/`uname -p`/${IOCRELEASE}
     fi
 
     sysrc -f /etc/rc.conf.d/iocage iocage_enable="YES"
