@@ -15,7 +15,11 @@ if zfs list ${IOCPOOLNAME} >/dev/null 2>/dev/null ; then
     iocage activate ${IOCPOOLNAME}
 
     if ! iocage list -r | grep "${IOCRELEASE}" >/dev/null 2>/dev/null ; then
-        iocage fetch release=${IOCRELEASE}
+        ## use the same path as I used in freebsd-install-script/fzg
+        ## bsdinstall distfetch
+        iocage fetch release=${IOCRELEASE} \
+            ftphost=ftp.freebsd.org \
+            ftpdir=/pub/FreeBSD/releases/`uname -m`/`uname -p`/${IOCRELEASE}/
     fi
 
     sysrc -f /etc/rc.conf.d/iocage iocage_enable="YES"
