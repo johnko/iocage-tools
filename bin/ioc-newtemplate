@@ -31,17 +31,17 @@ else
         sysrc -f $( ioc-pathof ${TEMPLATE} )/etc/rc.conf.d/firstboot_jail firstboot_jail_squid="${SQUID}"
     fi
     ## install pkg-static
-    install -m 755 /usr/local/sbin/pkg-static  $( ioc-pathof ${TEMPLATE} )/sbin/pkg-static
+    install -C -m 755 /usr/local/sbin/pkg-static  $( ioc-pathof ${TEMPLATE} )/sbin/pkg-static
     ## install etc/files
     for i in $( find ~/git/iocage-tools/etc -type f -maxdepth 1 ) ; do
         if [ -f ${i} ]; then
-            install -m 644 ${i}  $( ioc-pathof ${TEMPLATE} )/etc/${i##*/}
+            install -C -m 644 ${i}  $( ioc-pathof ${TEMPLATE} )/etc/${i##*/}
         fi
     done
     ## install etc/rc.d/files
     for i in $( find ~/git/iocage-tools/etc/rc.d -type f -maxdepth 1 ) ; do
         if [ -f ${i} ]; then
-            install -m 555 ${i}  $( ioc-pathof ${TEMPLATE} )/etc/rc.d/${i##*/}
+            install -C -m 555 ${i}  $( ioc-pathof ${TEMPLATE} )/etc/rc.d/${i##*/}
         fi
     done
 
@@ -56,7 +56,7 @@ else
         exit 1
     else
         ## install fres
-        install -m 700 ~/bin/fres  $( ioc-pathof ${TEMPLATE} )/root/bin/fres
+        install -C -m 700 ~/bin/fres  $( ioc-pathof ${TEMPLATE} )/root/bin/fres
     fi
 
     ## start jail so it runs firstboot

@@ -31,17 +31,17 @@ else
         sysrc -f $( ioc-pathof ${JAILNAME} )/etc/rc.conf.d/firstboot_jail firstboot_jail_squid="${SQUID}"
     fi
     ## install pkg-static
-    install -m 755 /usr/local/sbin/pkg-static  $( ioc-pathof ${JAILNAME} )/sbin/pkg-static
+    install -C -m 755 /usr/local/sbin/pkg-static  $( ioc-pathof ${JAILNAME} )/sbin/pkg-static
     ## install etc/files
     for i in $( find ~/git/iocage-tools/etc -type f -maxdepth 1 ) ; do
         if [ -f ${i} ]; then
-            install -m 644 ${i}  $( ioc-pathof ${JAILNAME} )/etc/${i##*/}
+            install -C -m 644 ${i}  $( ioc-pathof ${JAILNAME} )/etc/${i##*/}
         fi
     done
     ## install etc/rc.d/files
     for i in $( find ~/git/iocage-tools/etc/rc.d -type f -maxdepth 1 ) ; do
         if [ -f ${i} ]; then
-            install -m 555 ${i}  $( ioc-pathof ${JAILNAME} )/etc/rc.d/${i##*/}
+            install -C -m 555 ${i}  $( ioc-pathof ${JAILNAME} )/etc/rc.d/${i##*/}
         fi
     done
 
@@ -56,7 +56,7 @@ else
     else
         ## copy local/cshvars
         if [ -e ~/local/cshvars ]; then
-            install -m 600 ~/local/cshvars  $( ioc-pathof ${JAILNAME} )/root/local/cshvars
+            install -C -m 600 ~/local/cshvars  $( ioc-pathof ${JAILNAME} )/root/local/cshvars
         fi
     fi
 fi
