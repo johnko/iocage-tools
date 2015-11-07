@@ -18,6 +18,9 @@ pf-nat-jails
 iocage create -c tag=${JAILNAME} ip4_addr="${NICNET}"
 iocage set boot=off ${JAILNAME}
 
+## WORKAROUND set tag again so the soft link in /iocage/tags/ is created
+iocage set tag=${JAILNAME} ${JAILNAME}
+
 if ! ioc-pathof ${JAILNAME} >/dev/null 2>&1; then
     echo "ERROR: jail not created."
     exit 1
