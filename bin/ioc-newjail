@@ -1,7 +1,7 @@
 #!/bin/sh
 
 if [ "x" = "x$3" ]; then
-    echo "Usage: $0 common tag 'lo1|10.7.7.253/32'"
+    echo "Usage: $0 tag 'lo1|10.7.7.253/32'"
     exit 1
 fi
 
@@ -15,7 +15,7 @@ NICNET="${2}"
 
 pf-nat-jails
 
-iocage create -c tag=${JAILNAME} ip4_addr="${NICNET}" ip4_addr="${NICNET}"
+iocage create -c tag=${JAILNAME} ip4_addr="${NICNET}"
 iocage set boot=off ${JAILNAME}
 
 if ! ioc-pathof ${JAILNAME} >/dev/null 2>&1; then
