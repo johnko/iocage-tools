@@ -68,14 +68,9 @@ firstboot_jail_run()
         export REPOSRC
     fi
 
-    ## Setup $HOME/bin , $HOME/git and more
+    ## Setup $HOME/git and more
     echo "RUN: fres"
                fres
-    if [ -e ${HOME}/git/skel/bin/fres ]; then
-        echo "RUN: rm -r ${HOME}/bin/"
-                   rm -r ${HOME}/bin/
-        sh ${HOME}/git/skel/bin/fres
-    fi
 
     ## setup portsnap
     echo "RUN: psnap"
