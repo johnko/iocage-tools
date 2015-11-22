@@ -44,10 +44,8 @@ firstboot_jail_run()
     ## Set HOME so we have the right HOME folder
     # echo "HOME var before: $HOME"
     HOME=/root
-    export HOME
     ## set PATH so fres can find git
     PATH="/sbin:/bin:/usr/sbin:/usr/bin:/usr/games:/usr/local/sbin:/usr/local/bin:${HOME}/bin"
-    export PATH
     # echo "HOME var after: $HOME"
 
     if [ "x" != "x${firstboot_jail_squid}" ]; then
@@ -55,18 +53,10 @@ firstboot_jail_run()
                    env SQUID=${firstboot_jail_squid} setproxy
         ## export HTTP_PROXY for psnap
         HTTP_PROXY="http://${firstboot_jail_squid}"
-        export HTTP_PROXY
     fi
 
     ## setup some vars that deploy scripts use
-    if [ "x" != "x${firstboot_jail_fqdn}" ]; then
-        FQDN=${firstboot_jail_fqdn}
-        export FQDN
-    fi
-    if [ "x" != "x${firstboot_jail_reposrc}" ]; then
-        REPOSRC=${firstboot_jail_reposrc}
-        export REPOSRC
-    fi
+    . /usr/local/bin/loadmyvars.sh
 
     ## Setup $HOME/git and more
     echo "RUN: fres"

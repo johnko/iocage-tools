@@ -49,17 +49,11 @@ else
 
     ## skip motd on jail console
     touch $( ioc-pathof ${TEMPLATE} )/root/.hushlogin
-    if [ ! -d $( ioc-pathof ${TEMPLATE} )/root/bin ]; then
-        install -d -m 700 \
-              $( ioc-pathof ${TEMPLATE} )/root/bin
-    fi
-    if [ ! -d $( ioc-pathof ${TEMPLATE} )/root/bin ]; then
-        echo "ERROR: template /root/bin not created."
-        exit 1
-    else
-        ## install fres
-        install -C -m 700 ~/bin/fres  $( ioc-pathof ${TEMPLATE} )/root/bin/fres
-    fi
+    ### install some scripts for firstboot
+    install -d -m 755 -o root -g wheel $( ioc-pathof ${JAILNAME} )/usr/local/bin
+    for i in setproxy fres psnap ; do
+        which $i >/dev/null 2>&1 && cp $(which $i) $( ioc-pathof ${JAILNAME} )/usr/local/bin/
+    done
 
     ## start jail so it runs firstboot
     iocage start ${TEMPLATE}

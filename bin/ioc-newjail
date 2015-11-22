@@ -49,31 +49,22 @@ else
 
     ## skip motd on jail console
     touch $( ioc-pathof ${JAILNAME} )/root/.hushlogin
-    if [ ! -d $( ioc-pathof ${JAILNAME} )/root/bin ]; then
-        install -d -m 700 \
-              $( ioc-pathof ${JAILNAME} )/root/bin
-    fi
-    if [ ! -d $( ioc-pathof ${JAILNAME} )/root/bin ]; then
-        echo "ERROR: jail /root/bin not created."
-        exit 1
-    else
-        ## install fres
-        install -C -m 700 ~/bin/fres  $( ioc-pathof ${JAILNAME} )/root/bin/fres
-    fi
-    ## create local
-    if [ ! -d $( ioc-pathof ${JAILNAME} )/root/local ]; then
-        install -d -m 700 \
-              $( ioc-pathof ${JAILNAME} )/root/local
-    fi
-    if [ ! -d $( ioc-pathof ${JAILNAME} )/root/local ]; then
-        echo "ERROR: jail /root/local not created."
-        exit 1
-    else
-        ## copy local/cshvars
-        if [ -e ~/local/cshvars ]; then
-            install -C -m 600 ~/local/cshvars  $( ioc-pathof ${JAILNAME} )/root/local/cshvars
-        fi
-    fi
+    ### install some scripts for firstboot
+    install -d -m 755 -o root -g wheel $( ioc-pathof ${JAILNAME} )/usr/local/bin
+    for i in setproxy fres psnap ; do
+        which $i >/dev/null 2>&1 && cp $(which $i) $( ioc-pathof ${JAILNAME} )/usr/local/bin/
+    done
+    ## copy perm/*conf
+    install -d -m 700 -o root -g wheel $( ioc-pathof ${JAILNAME} )/root/perm
+    for i in $( ls /root/perm/*conf 2>/dev/null ) ; do
+        install -C -m 600 $i $( ioc-pathof ${JAILNAME} )/root/perm/
+    done
+    ## copy local/*conf
+    install -d -m 700 -o root -g wheel $( ioc-pathof ${JAILNAME} )/root/local
+    for i in $( ls /root/local/*conf 2>/dev/null ) ; do
+        install -C -m 600 $i $( ioc-pathof ${JAILNAME} )/root/local/
+    done
+
     ## start jail so it runs firstboot
     #iocage start ${JAILNAME}
 
