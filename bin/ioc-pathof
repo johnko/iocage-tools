@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# /iocage/tags could be used, but doesn't work with clones
+
 if [ "x" = "x$1" ]; then
     echo "Usage: $0 tag"
     exit 1
