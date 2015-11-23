@@ -51,7 +51,7 @@ else
     touch $( ioc-pathof ${JAILNAME} )/root/.hushlogin
     ### install some scripts for firstboot
     install -d -m 755 -o root -g wheel $( ioc-pathof ${JAILNAME} )/usr/local/bin
-    for i in setproxy fres psnap ; do
+    for i in setproxy fres psnap loadmyvars.sh ; do
         which $i >/dev/null 2>&1 && install -C -m 755 $(which $i) $( ioc-pathof ${JAILNAME} )/usr/local/bin/
     done
     ## copy perm/*conf
