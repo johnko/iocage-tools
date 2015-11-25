@@ -1,5 +1,12 @@
 #!/bin/sh
 
+# exit if running already
+THISSCRIPT=${0##*/}
+if pgrep -lf ${THISSCRIPT} > /dev/null 2> /dev/null ; then
+    exit 1
+fi
+
+
 . /usr/local/bin/loadmyvars.sh
 
 if ! which iocage >/dev/null 2>&1 ; then
