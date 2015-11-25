@@ -1,5 +1,7 @@
 #!/bin/sh
 
+. /usr/local/bin/loadmyvars.sh
+
 if [ "x" = "x$3" ]; then
     echo "Usage: $0 common tag 'lo1|10.7.7.253/32'"
     exit 1
@@ -26,7 +28,7 @@ else
     ## create the firstboot_sentinel file
     touch $( ioc-pathof ${JAILNAME} )/firstboot
     sysrc -f $( ioc-pathof ${JAILNAME} )/etc/rc.conf.d/firstboot_jail firstboot_jail_enable=YES
-    SQUID=$( echo ${HTTP_PROXY} | awk -F/ '{print $NF}' )
+    #SQUID=$( echo ${HTTP_PROXY} | awk -F/ '{print $NF}' )
     if [ "x" != "x${SQUID}" ]; then
         sysrc -f $( ioc-pathof ${JAILNAME} )/etc/rc.conf.d/firstboot_jail firstboot_jail_squid="${SQUID}"
     fi
