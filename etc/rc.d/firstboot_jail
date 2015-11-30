@@ -65,7 +65,7 @@ firstboot_jail_run()
     ## run deploy_${firstboot_jail_deploy}
     if which deploy_${firstboot_jail_deploy} >/dev/null 2>/dev/null ; then
         echo "RUN: deploy_${firstboot_jail_deploy}"
-                   deploy_${firstboot_jail_deploy}
+                   deploy_${firstboot_jail_deploy} >/var/log/deploy.log
     fi
 
 }
