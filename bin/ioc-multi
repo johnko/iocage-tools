@@ -44,7 +44,7 @@ starttmux() {
     tmux set-window-option -t "$SSHMULTISESSION" synchronize-panes on
 }
 
-HOSTS=$( iocage list | grep -v UUID | awk '{print $2}' )
+HOSTS=$( iocage list | grep -v UUID | awk '{print $5}' )
 
 starttmux $HOSTS
 
