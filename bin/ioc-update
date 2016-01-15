@@ -1,0 +1,26 @@
+#!/bin/sh
+
+if [ "x" = "x$*" ]; then
+    JAILS=$( iocage list | grep -v UUID | awk '{print $5}' )
+else
+    JAILS="$*"
+fi
+
+for i in $JAILS ; do
+    iocage stop $i
+    iocage set securelevel=0 $i
+    iocage start $i
+done
+
+for i in $JAILS ; do
+    iocage exec $i env PAGER=cat freebsd-update -F fetch install
+done
+
+for i in $JAILS ; do
+    iocage stop $i
+    iocage set securelevel=2 $i
+    # iocage start $i
+done
+
+# start the iocage service which will only start the ones where boot=yes
+service iocage start
