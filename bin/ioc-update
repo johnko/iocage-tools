@@ -7,14 +7,15 @@ else
 fi
 
 for i in $JAILS ; do
-    iocage stop $i
-    iocage set securelevel=0 $i
-    iocage start $i
-    iocage exec $i env PAGER=cat freebsd-update -F fetch install
-    iocage stop $i
-    iocage set securelevel=2 $i
+    iocage update $i
+    # iocage stop $i
+    # iocage set securelevel=0 $i
+    # iocage start $i
+    # iocage exec $i env PAGER=cat freebsd-update -F fetch install
+    # iocage stop $i
+    # iocage set securelevel=2 $i
 done
 
 # start the iocage service which will only start the ones where boot=yes
-service iocage start
+# service iocage start
 
