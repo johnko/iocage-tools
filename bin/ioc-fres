@@ -12,7 +12,7 @@ done
 
 
 for i in $JAILS ; do
-    echo $i
-    iocage exec $i pkg upgrade
+    echo "$i : suggest you do: pkg upgrade"
+    iocage console $i
 done
 
