@@ -1,0 +1,18 @@
+#!/bin/sh
+
+JAILNAME=$1
+NEWTAG=$2
+NICIP="$3"
+
+uuid=$( iocage get host_hostuuid $JAILNAME )
+
+cp -a /iocage/tags/${JAILNAME}/fstab /iocage/tags/${JAILNAME}/fstab.old
+
+cat /iocage/tags/${JAILNAME}/fstab.old \
+    | sed "s;/iocage/tags/${JAILNAME}/;/iocage/tags/${NEWTAG}/;" \
+    >/iocage/tags/${JAILNAME}/fstab
+
+iocage set tag=$NEWTAG $uuid
+
+iocage set ip4_addr="$NICIP" $uuid
+
