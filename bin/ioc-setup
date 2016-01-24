@@ -36,3 +36,5 @@ else
     echo "ERROR: ioc-setup not complete because ${IOCPOOLNAME} doesn't exist."
     exit 1
 fi
+
+ioc-tankports
