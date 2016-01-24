@@ -55,12 +55,22 @@ firstboot_jail_run()
         HTTP_PROXY="http://${firstboot_jail_squid}"
     fi
 
-    ## setup some vars that deploy scripts use
-    . /usr/local/bin/loadmyvars.sh
-
     ## Setup $HOME/git and more
     echo "RUN: fres"
                fres
+
+    ## Set FQDN passed from host
+    if [ "x" != "x${firstboot_jail_fqdn}" ]; then
+        echo "FQDN=${firstboot_jail_fqdn}" > ${HOME}/local/fqdn.conf
+    fi
+
+    ## Set REPOSRC passed from host
+    if [ "x" != "x${firstboot_jail_reposrc}" ]; then
+        echo "REPOSRC=${firstboot_jail_reposrc}" > ${HOME}/local/reposrc.conf
+    fi
+
+    ## setup some vars that deploy scripts use
+    . /usr/local/bin/loadmyvars.sh
 
     ## run deploy_${firstboot_jail_deploy}
     if which deploy_${firstboot_jail_deploy} >/dev/null 2>/dev/null ; then
