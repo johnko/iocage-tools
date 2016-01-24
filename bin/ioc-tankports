@@ -9,7 +9,7 @@ fi
 . /usr/local/bin/loadmyvars.sh
 
 
-if zfs list ${IOCPOOLNAME}/iocage >/dev/null 2>/dev/null ; then
+if zfs list ${IOCPOOLNAME}/iocage/base >/dev/null 2>/dev/null ; then
     zfs set canmount=off pool/usr/ports
     zfs create -o mountpoint=/var/ports ${IOCPOOLNAME}/portsvar
     zfs create -o mountpoint=/usr/ports ${IOCPOOLNAME}/portsusr
