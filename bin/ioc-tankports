@@ -11,7 +11,9 @@ fi
 
 if zfs list ${IOCPOOLNAME}/iocage/base >/dev/null 2>/dev/null ; then
     zfs set canmount=off pool/usr/ports
-    zfs list ${IOCPOOLNAME}/portsvar >/dev/null 2>&1 || zfs create -o mountpoint=/var/ports ${IOCPOOLNAME}/portsvar
-    zfs list ${IOCPOOLNAME}/portsdb >/dev/null 2>&1 || zfs create -o mountpoint=/var/db/portsnap ${IOCPOOLNAME}/portsdb
-    zfs list ${IOCPOOLNAME}/portsusr >/dev/null 2>&1 || zfs create -o mountpoint=/usr/ports ${IOCPOOLNAME}/portsusr
+    zfs list ${IOCPOOLNAME}/ports     >/dev/null 2>&1 || zfs create -o canmount=off                ${IOCPOOLNAME}/ports
+    zfs list ${IOCPOOLNAME}/ports/db  >/dev/null 2>&1 || zfs create -o mountpoint=/var/db/portsnap ${IOCPOOLNAME}/ports/db
+    zfs list ${IOCPOOLNAME}/ports/usr >/dev/null 2>&1 || zfs create -o mountpoint=/usr/ports       ${IOCPOOLNAME}/ports/usr
+    zfs list ${IOCPOOLNAME}/ports/var >/dev/null 2>&1 || zfs create -o mountpoint=/var/ports       ${IOCPOOLNAME}/ports/var
 fi
+
