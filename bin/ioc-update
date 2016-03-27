@@ -11,7 +11,7 @@ for i in $JAILS ; do
     # iocage stop $i
     # iocage set securelevel=0 $i
     # iocage start $i
-    # iocage exec $i env PAGER=cat freebsd-update -F -s update4.freebsd.org fetch install
+    # iocage exec $i env PAGER=cat freebsd-update -F fetch install
     # iocage stop $i
     # iocage set securelevel=2 $i
 done
