@@ -3,7 +3,7 @@
 . /usr/local/bin/loadmyvars.sh
 
 if [ "x" = "x$2" ]; then
-    echo "Usage: $0 common 'lo1|10.7.7.253/32'"
+    echo "Usage: $0 common 'lo2|10.7.7.253/32'"
     exit 1
 fi
 

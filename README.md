@@ -5,6 +5,6 @@ Script for ZFS based jails with iocage so we can do thin clones
 
 ```
 ioc-setup
-ioc-newtemplate common "lo1|10.7.7.100/32"
-ioc-newjail common myjail "lo1|10.7.7.100/32"
+ioc-newtemplate common "lo2|10.7.7.100/32"
+ioc-newjail common myjail "lo2|10.7.7.100/32"
 ```
